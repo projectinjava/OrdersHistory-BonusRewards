@@ -1,5 +1,8 @@
 package com.citibank.orders.info.service.beans;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class OrderHistoryServiceResBean {
 
 	private StatusBlock statusBlock;

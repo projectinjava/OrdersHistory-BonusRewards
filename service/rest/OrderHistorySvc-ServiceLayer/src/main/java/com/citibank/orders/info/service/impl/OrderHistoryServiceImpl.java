@@ -22,7 +22,7 @@ import com.citibank.orders.info.service.builder.OrderHistoryServiceResBuilder;
 import com.citibank.orders.info.service.exception.OrderHistorySvcInvalidException;
 import com.citibank.orders.info.service.validator.OrderHistoryServiceValidator;
 
-@Path("/orderhistory")
+@Path("orderhistory")
 public class OrderHistoryServiceImpl implements OrderHistoryService {
 
 	@Path("/v1/orders")
