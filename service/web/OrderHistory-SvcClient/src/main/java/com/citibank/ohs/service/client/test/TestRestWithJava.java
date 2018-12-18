@@ -9,11 +9,13 @@ import com.citibank.ohs.service.client.beans.OrderHistoryWebSvcRes;
 import com.citibank.ohs.service.client.beans.OrdersInfo;
 import com.citibank.ohs.service.client.beans.ServiceDetails;
 import com.citibank.ohs.service.client.impl.OrderHistoryServiceClientImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class TestRestWithJava {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JsonProcessingException {
 
 		OrderHistoryServiceClient impl=new OrderHistoryServiceClientImpl();
 
@@ -51,6 +53,16 @@ public class TestRestWithJava {
 		
 		System.out.println("TestRestWithJava : "+svcReq);
 		OrderHistoryWebSvcRes svcResp=impl.getOrderHistory(svcReq);
+		
+		/*ObjectMapper mapper=new ObjectMapper();
+		System.out.println(mapper.writeValueAsString(svcResp));*/
+		
+		for(int i=0;i<3;i++) {
+		String price=svcResp.getOrderHistoryDetails().getOrderHistory().get(i).getPrice();
+		String oid=svcResp.getOrderHistoryDetails().getOrderHistory().get(i).getOid();
+		System.out.println("Price : "+price+" Oid : "+oid);
+		}
+		
 		System.out.println("SvcResp : "+svcResp);
 
 	}

@@ -31,8 +31,8 @@ public class OrderHistoryWebController {
 		String page = "sucess";
 
 		try {
-			// get the webrequest from user
-			// prepare the werservice request for client
+			// get the webRequest from user
+			// prepare the werService request for client
 			OrderHistoryWebSvcReq svcReq = new OrderHistoryWebSvcReq();
 
 			CardDetails cardDetails = new CardDetails();
@@ -53,9 +53,9 @@ public class OrderHistoryWebController {
 			svcReq.setDateRange(dateRange);
 			svcReq.setOrdersInfo(ordersInfo);
 
-			// create the webservice client obj
+			// create the webService client obj
 			OrderHistoryServiceClient svcClient = new OrderHistoryServiceClientImpl();
-			// call the webservice client by passing wsreq obj and get the wsresp
+			// call the webService client by passing wsReq obj and get the wsresp
 			OrderHistoryWebSvcRes wsResp = svcClient.getOrderHistory(svcReq);
 			// convert the wsResp to webResp
 			OrderHistoryWebResBeans webResp = new OrderHistoryWebResBeans();
@@ -74,7 +74,7 @@ public class OrderHistoryWebController {
 			webResp.setOrders(ordersList);
 			webResp.setRespCode(wsResp.getStatusBlock().getRespCode());
 			webResp.setRespmsg(wsResp.getStatusBlock().getRespMessage());
-			// store the webresp into sessions or request scope
+			// store the webResp into sessions or request scope
 			model.addAttribute("result", webResp);
 		} catch (Exception e) {
 			page = "failure";

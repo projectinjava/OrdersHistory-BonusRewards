@@ -42,12 +42,8 @@ public class OrderHistoryServiceClientImpl implements OrderHistoryServiceClient 
 		// create HttpEntity obj
 
 		HttpEntity<OrderHistoryWebSvcReq> request = new HttpEntity<OrderHistoryWebSvcReq>(svcReq, headers);
-		System.out.println("1");
-		System.out.println("Request : "+request);
-		System.out.println("Template : "+template);
+		
 		OrderHistoryWebSvcRes response = template.postForObject(uri, request, OrderHistoryWebSvcRes.class);
-		System.out.println("2");
-		System.out.println("Response is " + response);
 		return response;
 		
 	}
