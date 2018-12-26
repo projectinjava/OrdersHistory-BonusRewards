@@ -22,7 +22,7 @@ public class DAOTask implements Callable<OrderHistoryDAOResBean> {
 		OrderHistoryDAO orderHistoryDAO = new OrderHistoryDAOImpl();
 		 daoResponse =  orderHistoryDAO.getOrderHistory(daoReq);
 		 
-		 System.out.println("daoresponse from DAOTASK"+daoResponse);
+		 System.out.println("daoresponse from DAOTASK : "+daoResponse);
 			
 		return daoResponse;
 	}

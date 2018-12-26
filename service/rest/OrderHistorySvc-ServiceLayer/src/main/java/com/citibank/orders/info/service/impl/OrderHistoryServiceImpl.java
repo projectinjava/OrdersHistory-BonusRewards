@@ -8,6 +8,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import com.citibank.orders.info.dao.exce.BusinessException;
+import com.citibank.orders.info.dao.exce.SystemException;
+import com.citibank.orders.info.dao.util.ServiceErrorCodesEnum;
 import com.citibank.orders.info.process.OrderHistoryProcess;
 import com.citibank.orders.info.process.beans.OrderHistoryProcessReqBean;
 import com.citibank.orders.info.process.beans.OrderHistoryProcessResBean;
@@ -60,24 +63,56 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
 			// 5. call the processorder method and get the response
 			processResp = process.getOrderHistory(processReq);
 			OrderHistoryServiceResBuilder respBuilder = new OrderHistoryServiceResBuilder();
-			serviceResp = respBuilder.buildServiceResponse(processResp);
+			serviceResp = respBuilder.buildServiceResponse(processResp, serviceReq);
 		} catch (OrderHistorySvcInvalidException e) {
 
 			serviceResp = new OrderHistoryServiceResBean();
-			StatusBlock statusBlock = new StatusBlock();
-			statusBlock.setRespCode(e.getResCode());
-			statusBlock.setRespMessage(e.getResMsg());
-			serviceResp.setStatusBlock(statusBlock);
-			e.printStackTrace();
-		} catch (Exception e) {
 
-			serviceResp = new OrderHistoryServiceResBean();
+			String code = ServiceErrorCodesEnum.reqcheckErrorCode(e.getResCode());
+			String mess = ServiceErrorCodesEnum.reqcheckErrorMsg(e.getResMsg(), e.getResCode());
 			StatusBlock statusBlock = new StatusBlock();
-			statusBlock.setRespCode("8888");
-			statusBlock.setRespMessage("Unknown Error");
+			statusBlock.setRespCode(code);
+			statusBlock.setRespMessage(mess);
 			serviceResp.setStatusBlock(statusBlock);
-			e.printStackTrace();
+			System.out.println("status=" + code + "," + mess);
+
+			// e.printStackTrace();
+
+		} catch (BusinessException be) {
+			serviceResp = new OrderHistoryServiceResBean();
+			StatusBlock sb = null;
+			String code = ServiceErrorCodesEnum.checkErrorCode(be.getRespCode());
+			System.out.println(code);
+			if (code != null) {
+				String mess = ServiceErrorCodesEnum.checkErrorMsg(be.getRespMsg(), be.getRespCode());
+				sb = new StatusBlock();
+				sb.setRespCode(code);
+				sb.setRespMessage(mess);
+				serviceResp.setStatusBlock(sb);
+				System.out.println("status=" + code + "," + mess);
+
+			}
+		} catch (SystemException se) {
+			serviceResp = new OrderHistoryServiceResBean();
+			StatusBlock sb = null;
+			String code = ServiceErrorCodesEnum.checkErrorCode(se.getRespCode());
+			if (code != null) {
+				String mess = ServiceErrorCodesEnum.checkErrorMsg(se.getRespMsg(), se.getRespCode());
+				sb = new StatusBlock();
+				sb.setRespCode(code);
+				sb.setRespMessage(mess);
+				serviceResp.setStatusBlock(sb);
+				System.out.println("status=" + code + "," + mess);
+			}
 		}
+		/*
+		 * (Exception e) {
+		 * 
+		 * serviceResp = new OrderHistoryServiceResBean(); StatusBlock statusBlock = new
+		 * StatusBlock(); statusBlock.setRespCode("8888");
+		 * statusBlock.setRespMessage("Unknown Error");
+		 * serviceResp.setStatusBlock(statusBlock); e.printStackTrace(); }
+		 */
 
 		System.out.println("Exit from OrderHistoryServiceImpl Layer : " + serviceResp);
 		return serviceResp;

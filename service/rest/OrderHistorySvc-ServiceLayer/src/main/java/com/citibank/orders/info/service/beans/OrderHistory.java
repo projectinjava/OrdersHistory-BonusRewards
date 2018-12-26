@@ -1,6 +1,7 @@
 package com.citibank.orders.info.service.beans;
 
 public class OrderHistory {
+
 	private String oid;
 	private String name;
 	private String desc;
@@ -8,6 +9,15 @@ public class OrderHistory {
 	private String date;
 	private String type;
 	private String price;
+	private String cardnumber;
+
+	public String getCardnumber() {
+		return cardnumber;
+	}
+
+	public void setCardnumber(String cardnumber) {
+		this.cardnumber = cardnumber;
+	}
 
 	public String getOid() {
 		return oid;
@@ -82,9 +92,10 @@ public class OrderHistory {
 		builder.append(type);
 		builder.append(", price=");
 		builder.append(price);
+		builder.append(", cardnumber=");
+		builder.append(cardnumber);
 		builder.append("]");
 		return builder.toString();
 	}
 
-	
 }

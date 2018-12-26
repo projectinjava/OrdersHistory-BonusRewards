@@ -2,47 +2,33 @@ package com.citibank.ohs.web.beans;
 
 import java.util.List;
 
+import com.citibank.ohs.service.client.beans.StatusBlock;
+
 public class OrderHistoryWebResBeans {
 
 	List<Orders> orders;
-	private String respCode;
-	private String respmsg;
-
+	private StatusBlock statusBlockWeb;
 	public List<Orders> getOrders() {
 		return orders;
 	}
-
 	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
-
-	public String getRespCode() {
-		return respCode;
+	public StatusBlock getStatusBlockWeb() {
+		return statusBlockWeb;
 	}
-
-	public void setRespCode(String respCode) {
-		this.respCode = respCode;
+	public void setStatusBlockWeb(StatusBlock statusBlockWeb) {
+		this.statusBlockWeb = statusBlockWeb;
 	}
-
-	public String getRespmsg() {
-		return respmsg;
-	}
-
-	public void setRespmsg(String respmsg) {
-		this.respmsg = respmsg;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("OrderHistoryWebResBeans [orders=");
 		builder.append(orders);
-		builder.append(", respCode=");
-		builder.append(respCode);
-		builder.append(", respmsg=");
-		builder.append(respmsg);
+		builder.append(", statusBlockWeb=");
+		builder.append(statusBlockWeb);
 		builder.append("]");
 		return builder.toString();
 	}
-
+	
 }

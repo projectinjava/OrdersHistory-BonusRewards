@@ -15,6 +15,8 @@ import com.citibank.orders.info.carddetailsdao.impl.CardDetailsDAOImpl;
 import com.citibank.orders.info.dao.beans.OrderDetailsDAO;
 import com.citibank.orders.info.dao.beans.OrderHistoryDAOReqBean;
 import com.citibank.orders.info.dao.beans.OrderHistoryDAOResBean;
+import com.citibank.orders.info.dao.exce.BusinessException;
+import com.citibank.orders.info.dao.exce.SystemException;
 import com.citibank.orders.info.process.OrderHistoryProcess;
 import com.citibank.orders.info.process.beans.OrderDetailsProcessBean;
 import com.citibank.orders.info.process.beans.OrderHistoryProcessReqBean;
@@ -23,7 +25,7 @@ import com.citibank.orders.info.process.tasks.DAOTask;
 
 public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 
-	public OrderHistoryProcessResBean getOrderHistory(OrderHistoryProcessReqBean processReq) throws InterruptedException, ExecutionException {
+	public OrderHistoryProcessResBean getOrderHistory(OrderHistoryProcessReqBean processReq) throws InterruptedException, ExecutionException, BusinessException, SystemException {
 		
 		System.out.println("entered into OrderHistoryProcessImpl layer : "+processReq);
 		OrderHistoryProcessResBean processResBean = new OrderHistoryProcessResBean();
@@ -40,7 +42,7 @@ public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 		// 3. checking if the cardResponse is valid or not
 		// 4 apply paralell call to invoke the orderhistorydao
 		try {
-			if (cardRespponse.getCardList() != null && !cardRespponse.getCardList().isEmpty()) {
+			if (cardRespponse!=null && cardRespponse.getCardList() != null && !cardRespponse.getCardList().isEmpty()) {
 
 				Set setOfTask = new HashSet();
 				List<String> cardList = cardRespponse.getCardList();
@@ -48,6 +50,7 @@ public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 				// setting DAOReqBean
 				for (int i = 0; i < cardList.size(); i++) {
 					OrderHistoryDAOReqBean daoReq = new OrderHistoryDAOReqBean();
+					
 					daoReq.setCardNumber(cardRespponse.getCardList().get(i)); //get from cardsResp
 					daoReq.setChannelId(processReq.getChannelId());
 					daoReq.setClientId(processReq.getClientId());
@@ -74,9 +77,22 @@ public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 				List<OrderDetailsProcessBean> orderDetailsProcessBeanList = new ArrayList<OrderDetailsProcessBean>();
 
 				for (Future<OrderHistoryDAOResBean> future : ftlist) {
+					try {
+						daoRes = future.get();
 
-					daoRes = future.get();
+						System.out.println("in process dao resp:" + daoRes);
 
+					} catch (ExecutionException e) {
+						if (e.getCause() instanceof BusinessException) {
+							BusinessException be = (BusinessException) e.getCause();
+							throw be;
+
+						} else if (e.getCause() instanceof SystemException) {
+							SystemException se = (SystemException) e.getCause();
+							throw se;
+						}
+					}
+					
 					List<OrderDetailsDAO> orderDetailsDAOBeanList = daoRes.getOrderDetails();
 
 					for (OrderDetailsDAO ordersDAO : orderDetailsDAOBeanList) {
@@ -84,6 +100,7 @@ public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 						//System.out.println("OrderDetailsDAO "+ordersDAO.getOid());
 
 						OrderDetailsProcessBean orderDetailsProcessBean = new OrderDetailsProcessBean();
+						
 						orderDetailsProcessBean.setOid(ordersDAO.getOid());
 						orderDetailsProcessBean.setName(ordersDAO.getName());
 						orderDetailsProcessBean.setDate(ordersDAO.getDate());
@@ -91,6 +108,8 @@ public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 						orderDetailsProcessBean.setPrice(ordersDAO.getPrice());
 						orderDetailsProcessBean.setStatus(ordersDAO.getStatus());
 						orderDetailsProcessBean.setType(ordersDAO.getType());
+						orderDetailsProcessBean.setCardNumber(ordersDAO.getCardnumber());
+						
 						orderDetailsProcessBeanList.add(orderDetailsProcessBean);
 					}
 					
@@ -100,9 +119,14 @@ public class OrderHistoryProcessImpl implements OrderHistoryProcess {
 				}
 
 			}
-		} catch (Exception e) {
+		}catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 
+			e.printStackTrace();
 		}
+
+		//executorService.shutdown();
+
 		System.out.println("Exit from OrderHistoryProcessImpl layer : "+processResBean);
 		return processResBean;
 	}

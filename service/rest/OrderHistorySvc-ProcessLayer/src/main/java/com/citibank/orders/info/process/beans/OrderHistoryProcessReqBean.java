@@ -4,6 +4,13 @@ public class OrderHistoryProcessReqBean {
 	
 	private String clientId;
 	private String channelId;
+	private String requestId;
+	public String getRequestId() {
+		return requestId;
+	}
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
 	private String cardNum;
 	private String cvvNum;
 	private String expDate;
@@ -79,6 +86,8 @@ public class OrderHistoryProcessReqBean {
 		builder.append(clientId);
 		builder.append(", channelId=");
 		builder.append(channelId);
+		builder.append(", requestId=");
+		builder.append(requestId);
 		builder.append(", cardNum=");
 		builder.append(cardNum);
 		builder.append(", cvvNum=");
@@ -98,5 +107,6 @@ public class OrderHistoryProcessReqBean {
 		builder.append("]");
 		return builder.toString();
 	}
+	
 	
 }

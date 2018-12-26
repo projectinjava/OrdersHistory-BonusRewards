@@ -22,5 +22,4 @@ public class OrderHistoryDetails {
 		return builder.toString();
 	}
 
-	
 }

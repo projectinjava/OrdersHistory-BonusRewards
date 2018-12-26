@@ -10,6 +10,7 @@ public class CardDetailsDAOImpl implements CardDetailsDAO {
 
 	public CardResponse getAllCards(String cardNum) {
 
+		System.out.println("enter into cards layer");
 		// 1.get the request from the PL
 
 		// 2. prepare the request for DB
@@ -27,7 +28,7 @@ public class CardDetailsDAOImpl implements CardDetailsDAO {
 		cardDAOResponse.setRespCode("0");
 		cardDAOResponse.setRespMessage("Success");
 		cardDAOResponse.setCardList(cardList);
-
+		System.out.println("exit from cards layer"+cardDAOResponse);
 		return cardDAOResponse;
 	}
 

@@ -2,19 +2,19 @@ package com.citibank.ohs.web.beans;
 
 public class Orders {
 
-	private String oid;
+	private int oid;
 	private String name;
 	private String desc;
 	private String date;
 	private String status;
 	private String type;
-	private String price;
+	private int price;
 
-	public String getOid() {
+	public int getOid() {
 		return oid;
 	}
 
-	public void setOid(String oid) {
+	public void setOid(int oid) {
 		this.oid = oid;
 	}
 
@@ -58,11 +58,11 @@ public class Orders {
 		this.type = type;
 	}
 
-	public String getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
